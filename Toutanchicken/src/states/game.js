@@ -12,6 +12,7 @@ var bulletTime = 0;
 var oneEgg = false;
 var smokeAnimation = false;
 var plumeAnimation = false;
+var winner = false;
 var scarabe_direction = 'right';
 var invincibilite;
 var thisGame = null;
@@ -23,6 +24,7 @@ var graines;
 
 var cursors;
 var fireButton;
+var spacebar;
 
 var health = 3;
 var healthText;
@@ -80,6 +82,8 @@ Game.prototype.create = function () {
     player.animations.add('left', [8, 9, 10, 11, 12, 13, 14, 15], 10, true)
     ;
     player.animations.add('jump', [0, 1, 2, 3, 4, 5, 6, 7], 10, true);
+
+    spacebar = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
     
 
     // ---------------------------
@@ -307,7 +311,7 @@ Game.prototype.create = function () {
 	healthText = this.add.text(600, 16, 'Health : 3 lifes', { fontsize: '32px', fill: 'red'});
 
 	// Ecriture WIN
-	youWin = this.add.bitmapText(6000, 200, 'carrier_command', 'You Win !', 34);
+	youWin = this.add.bitmapText(6000, 200, 'carrier_command', 'Bravo !', 34);
 	youWin.visible = false;
 	// youWin.fixedToCamera = true;
 	youWin.anchor.x = 0.5;
@@ -412,7 +416,7 @@ Game.prototype.update = function () {
         player.animations.play('jump');
     }
 
-    if (cursors.down.isDown && bullets.total == 0 && player.alive == true && !plumeAnimation)
+    if ((cursors.down.isDown || spacebar.isDown) && bullets.total == 0 && player.alive == true && !plumeAnimation)
     {
 		fireBullet();
 		oneEgg = true;
@@ -731,7 +735,13 @@ function TouchBoostedEgg (player, special_egg) {
 }
 
 function winLevel (player, poussin){
-	youWin.visible = true;
+    if(!winner){
+        youWin.visible = true;
+        setTimeout(function(){    
+            thisGame.state.start('gamewin');
+        }, 1000); 
+    }
+	winner = true;
 }
 
 module.exports = Game;

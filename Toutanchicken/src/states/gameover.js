@@ -1,9 +1,15 @@
 function Gameover() {}
 
 Gameover.prototype.create = function () {
-  var text = this.add.text(this.game.width * 0.5, this.game.height * 0.5, 'Gameover', {
-    font: '42px Arial', fill: '#ffffff', align: 'center'
-  });
+
+  this.add.sprite(0, 0, 'backgroundGameOver');
+
+  // var text = this.add.text(this.game.width * 0.5, this.game.height * 0.5, 'Gameover', {
+  //   font: '42px Arial', fill: '#ffffff', align: 'center'
+  // });
+  // text.anchor.set(0.5);
+
+  var text = this.add.image(this.game.width * 0.5, this.game.height * 0.3, 'gameover');
   text.anchor.set(0.5);
 
   this.input.onDown.add(this.onInputDown, this);

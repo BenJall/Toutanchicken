@@ -11,6 +11,8 @@ Preloader.prototype.preload = function () {
   this.game.load.spritesheet('poussin', '/assets/poussin.png', 18, 22);
   this.game.load.image('background', '/assets/background.png');
   this.game.load.image('background2', '/assets/background2.png');
+  this.game.load.image('backgroundGameOver', '/assets/bg_gameover2.png');
+  this.game.load.image('backgroundWin', '/assets/bg_win.png');
   this.game.load.image('graine', '/assets/granou.png');
   this.game.load.image('seed', '/assets/seedtrue.png');
   this.game.load.spritesheet('croco', '/assets/croco.png', 69, 72);
@@ -25,8 +27,13 @@ Preloader.prototype.preload = function () {
   this.game.load.image('niveau1', '/assets/niveau1.png', 192, 74); 
   this.game.load.image('niveau2', '/assets/niveau2.png', 192, 74);
   this.game.load.image('menu', '/assets/menu.png', 192, 74);  
+  this.game.load.image('controls', '/assets/controls.png', 600, 200);  
   this.game.load.image('gamename', '/assets/gamename.png', 600, 200);
+  this.game.load.image('gameover', '/assets/gameover.png', 600, 200);
+  this.game.load.image('victoire', '/assets/victoire.png', 600, 200);
+  this.game.load.image('poussin_win', '/assets/poussin_win.png', 336, 396);
   this.game.load.image('invincibilite', '/assets/invincibilite.png');
+  this.game.load.image('arrow_right', '/assets/arrow_right.png', 32, 8); 
   this.game.load.audio('music1', '/assets/audio/Toutanchicken.wav');
 
   this.game.load.bitmapFont('carrier_command', 'assets/font/carrier_command.png', 'assets/font/carrier_command.xml');
@@ -43,7 +50,7 @@ Preloader.prototype.create = function () {
 
 Preloader.prototype.update = function () {
   // if (!!this.ready) {
-    this.game.state.start('menu');
+    this.game.state.start('niveau2');
   // }
 };
 

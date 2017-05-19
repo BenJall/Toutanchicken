@@ -8,10 +8,14 @@ var croco;
 var croco2;
 var momie;
 var scarabe;
+var sphinx;
+var sphinx2;
+var sphinx3;
 var bulletTime = 0;
 var oneEgg = false;
 var smokeAnimation = false;
 var plumeAnimation = false;
+var winner = false;
 var scarabe_direction = 'right';
 var invincibilite;
 var thisGame = null;
@@ -23,6 +27,7 @@ var graines;
 
 var cursors;
 var fireButton;
+var spacebar;
 
 var health = 3;
 var healthText;
@@ -38,7 +43,7 @@ Game.prototype.create = function () {
 
     music = this.game.add.audio('music1');
     music.loop = true;
-    music.play();
+    // music.play();
 
 	// ---------------------------
 	//          MAP 
@@ -58,12 +63,16 @@ Game.prototype.create = function () {
 	// Détermine les tiles sur lesquelles le joueur entrera en collision. On a 16 tiles dans le décor.
 	map.setCollisionBetween(1, 16);
 
+
+	// Gravité du monde
+	this.physics.arcade.gravity.y = 500;
+
 	// ---------------------------
 	//          POULET 
 	// ---------------------------
 
 	// Le joueur : Arg1 et Arg2 = coordonnées de départ ; Arg3 = nom de la spritesheet déclarée en preload
-	player = this.add.sprite(30, 100, 'chicken');
+	player = this.add.sprite(1880, 100, 'chicken');
     // On active le moteur physique sur le joueur
 	this.physics.enable(player);
 	// Les propriétés physiques du joueur. On paramètre ici le rebond, la gravité, etc.
@@ -81,22 +90,19 @@ Game.prototype.create = function () {
     ;
     player.animations.add('jump', [0, 1, 2, 3, 4, 5, 6, 7], 10, true);
     
+    spacebar = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+
 
     // ---------------------------
 	//           CROCO 
 	// ---------------------------
 
 	// Les crocodiles : Arg1 et Arg2 = coordonnées de départ ; Arg3 = nom de la spritesheet déclarée en preload
-	croco = this.add.sprite(725, 510, 'croco');
+	croco = this.add.sprite(1889, 507, 'croco');
 	croco2 = this.add.sprite(3652, 507, 'croco');
     // On active le moteur physique sur les crocodiles
 	this.physics.enable(croco);
 	this.physics.enable(croco2);
-
-
-
-    // Gravité du monde
-	this.physics.arcade.gravity.y = 500;
 
 	// Animation des crocodiles
 	croco.animations.add('left', [8, 9, 10, 11, 12, 13, 14, 15], 10, true);
@@ -154,8 +160,8 @@ Game.prototype.create = function () {
 	// ---------------------------
 
     // The bats and its settings
-    bats = this.add.sprite(4795, 350, 'bats');
-    bats2 = this.add.sprite(5715, 220, 'bats');
+    bats = this.add.sprite(5000, 350, 'bats');
+    bats2 = this.add.sprite(5000, 200, 'bats');
 
     //  We need to enable physics on the bats
     this.physics.arcade.enable(bats);
@@ -177,7 +183,7 @@ Game.prototype.create = function () {
 	// ---------------------------
 
     // The scorpion and its settings
-    scorpion = this.add.sprite(1010, 283, 'scorpion');
+    scorpion = this.add.sprite(1785, 123, 'scorpion');
     scorpion2 = this.add.sprite(1781, 123, 'scorpion');
 
     //  We need to enable physics on the scorpion
@@ -237,18 +243,44 @@ Game.prototype.create = function () {
 	// ---------------------------
 
     // The sphinx and its settings
-    sphinx = this.add.sprite(4200, 300, 'sphinx');
+    sphinx = this.add.sprite(850, 300, 'sphinx');
+    sphinx2 = this.add.sprite(1000, 470, 'sphinx');
+    sphinx3 = this.add.sprite(1150, 300, 'sphinx');
 
     //  We need to enable physics on the sphinx
     this.physics.arcade.enable(sphinx);
+    this.physics.arcade.enable(sphinx2);
+    this.physics.arcade.enable(sphinx3);
 
     //  Player physics properties. Give the little guy a slight bounce.
     sphinx.body.bounce.y = 0.1;
     sphinx.body.collideWorldBounds = true;
+    sphinx2.body.bounce.y = 0.1;
+    sphinx2.body.collideWorldBounds = true;
+    sphinx3.body.bounce.y = 0.1;
+    sphinx3.body.collideWorldBounds = true;
 
     //  Our two animations, walking left and right.
     sphinx.animations.add('move', [0,1,2,3,4], 6, true);
-    // sphinx.animations.add('jump', [3], 10, true);
+    sphinx2.animations.add('move', [0,1,2,3,4], 6, true);
+    sphinx3.animations.add('move', [0,1,2,3,4], 6, true);
+
+
+    // ---------------------------
+	//           ARROWS 
+	// ---------------------------
+
+    arrowRight = this.add.sprite(1888, 235, 'arrow_right');
+    this.physics.arcade.enable(arrowRight);
+    arrowRight.body.collideWorldBounds = true;
+
+    arrowRight2 = this.add.sprite(1888, 310, 'arrow_right');
+    this.physics.arcade.enable(arrowRight2);
+    arrowRight2.body.collideWorldBounds = true;
+
+    arrowRight3 = this.add.sprite(1888, 385, 'arrow_right');
+    this.physics.arcade.enable(arrowRight3);
+    arrowRight3.body.collideWorldBounds = true;
 
 
 	// ---------------------------
@@ -324,19 +356,24 @@ Game.prototype.update = function () {
 	// Idem entre les différents éléments du jeu
 	this.game.physics.arcade.collide(graines, layer);
 	this.game.physics.arcade.collide(seeds, layer);
-	// this.game.physics.arcade.collide(croco, layer);
+	this.game.physics.arcade.collide(croco, layer);
 	// this.game.physics.arcade.collide(croco2, layer);
 	this.game.physics.arcade.collide(momie, layer);
 	this.game.physics.arcade.collide(momie2, layer);
 	// this.game.physics.arcade.collide(scarabe, layer);
-	this.game.physics.arcade.collide(bats, layer);
-	this.game.physics.arcade.collide(bats2, layer);
+	// this.game.physics.arcade.collide(bats, layer);
+	// this.game.physics.arcade.collide(bats2, layer);
 	this.game.physics.arcade.collide(scorpion, layer);
-	this.game.physics.arcade.collide(scorpion2, layer);
+	// this.game.physics.arcade.collide(scorpion2, layer);
 	this.game.physics.arcade.collide(bullets, layer);
 	this.game.physics.arcade.collide(poussin, layer);
 	this.game.physics.arcade.collide(sphinx, layer);
+	this.game.physics.arcade.collide(sphinx2, layer);
+	this.game.physics.arcade.collide(sphinx3, layer);
 	this.game.physics.arcade.collide(invincibilite, layer);
+	this.game.physics.arcade.collide(arrowRight, layer);
+	this.game.physics.arcade.collide(arrowRight2, layer);
+	this.game.physics.arcade.collide(arrowRight3, layer);
 
 
 	// On vérifie si le joueur mange une graine, si c'est le cas, on appelle la fonction collectGraine
@@ -354,6 +391,11 @@ Game.prototype.update = function () {
 	this.game.physics.arcade.overlap(player, scorpion, collideEnnemy, null, this);
 	this.game.physics.arcade.overlap(player, scorpion2, collideEnnemy, null, this);
 	this.game.physics.arcade.overlap(player, sphinx, collideEnnemy, null, this);
+	this.game.physics.arcade.overlap(player, sphinx2, collideEnnemy, null, this);
+	this.game.physics.arcade.overlap(player, sphinx3, collideEnnemy, null, this);
+	this.game.physics.arcade.overlap(player, arrowRight, collideEnnemy, null, this);
+	this.game.physics.arcade.overlap(player, arrowRight2, collideEnnemy, null, this);
+	this.game.physics.arcade.overlap(player, arrowRight3, collideEnnemy, null, this);
 	this.game.physics.arcade.overlap(player, invincibilite, TouchBoostedEgg, null, this);
 
 	this.game.physics.arcade.overlap(bullets, momie, collideEgg, null, this);
@@ -412,10 +454,11 @@ Game.prototype.update = function () {
         player.animations.play('jump');
     }
 
-    if (cursors.down.isDown && bullets.total == 0 && player.alive == true && !plumeAnimation)
+    if ((cursors.down.isDown || spacebar.isDown) && bullets.total == 0 && player.alive == true && !plumeAnimation)
     {
 		fireBullet();
 		oneEgg = true;
+		console.log(player.body.x, player.body.y);
     }
 
     if (health == 0)
@@ -435,11 +478,11 @@ Game.prototype.update = function () {
 	//        CROCO MOVES
 	// ---------------------------
 
-    if(croco.body.x > 720){
+    if(croco.body.x > 2025){
         croco.animations.play('left');
         croco.body.velocity.x = -80;
     }
-    if(croco.body.x < 400){
+    if(croco.body.x < 1890){
         croco.animations.play('right');
         croco.body.velocity.x = 80;
     }
@@ -537,32 +580,32 @@ Game.prototype.update = function () {
 	// ---------------------------
 
 	// BATS 1
-    if(bats.body.x < 4800){
+    if(bats.body.x < 1890){
         bats.animations.play("right");
         bats.body.velocity.x = 100;
     }
-    if(bats.body.x > 5075){
+    if(bats.body.x > 2025){
         bats.animations.play("left");
         bats.body.velocity.x = -100;
     }
 
     // Ne descend pas trop
-    if(bats.body.y > 370){
+    if(bats.body.y > 350){
        	bats.body.velocity.y = -60;
     }
 
     // BATS 1
-    if(bats2.body.x < 5720){
+    if(bats2.body.x < 1890){
         bats2.animations.play("right");
         bats2.body.velocity.x = 100;
     }
-    if(bats2.body.x > 6070){
+    if(bats2.body.x > 2025){
         bats2.animations.play("left");
         bats2.body.velocity.x = -100;
     }
 
     // Ne descend pas trop
-    if(bats2.body.y > 220){
+    if(bats2.body.y > 200){
        	bats2.body.velocity.y = -60;
     }
 
@@ -587,11 +630,56 @@ Game.prototype.update = function () {
 	// ---------------------------
 
 	sphinx.animations.play('move');
+	sphinx2.animations.play('move');
+	sphinx3.animations.play('move');
 
 	if(sphinx.body.onFloor()){
 		sphinx.body.velocity.y = -380;
 	}
+	if(sphinx2.body.onFloor()){
+		sphinx2.body.velocity.y = -380;
+	}
+	if(sphinx3.body.onFloor()){
+		sphinx3.body.velocity.y = -380;
+	}
+
+
+	// ---------------------------
+	//        ARROWS MOVES
+	// ---------------------------
     
+	//Flèche 1
+    if(arrowRight.body.x <2026){
+    	arrowRight.body.velocity.x = 250;
+    }
+    if(arrowRight.body.onWall()){
+    	resetArrow(arrowRight, 235);
+    }
+	if(arrowRight.body.y > 235){
+       	arrowRight.body.velocity.y = -10;
+    }
+    
+	//Flèche 2
+    if(arrowRight2.body.x <2026){
+    	arrowRight2.body.velocity.x = 250;
+    }
+    if(arrowRight2.body.onWall()){
+    	resetArrow(arrowRight2, 310);
+    }
+	if(arrowRight2.body.y > 310){
+       	arrowRight2.body.velocity.y = -10;
+    }
+	//Flèche 3
+    if(arrowRight3.body.x <2026){
+    	arrowRight3.body.velocity.x = 250;
+    }
+    if(arrowRight3.body.onWall()){
+    	resetArrow(arrowRight3, 385);
+    }
+	if(arrowRight3.body.y > 385){
+       	arrowRight3.body.velocity.y = -10;
+    }
+
 }
 
 
@@ -721,6 +809,13 @@ function deleteEgg (bullet){
 	}
 	oneEgg = false;
 	return oneEgg;	
+}
+
+function resetArrow(arrow, ypos){
+	arrow.body.velocity.x = 0;
+	setTimeout(function(){
+		// arrow.reset(1888, ypos);
+	}, 500);
 }
 
 function TouchBoostedEgg (player, special_egg) {
