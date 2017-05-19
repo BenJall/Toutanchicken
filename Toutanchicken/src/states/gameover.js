@@ -23,10 +23,15 @@ Gameover.prototype.create = function () {
   this.physics.enable(plume);
   plume.anchor.set(0.5);
   plume.animations.add('move', [0,1,2,3], 7, true);
+  plume.body.collideWorldBounds = true;
 };
 
 Gameover.prototype.update = function () {
 	plume.animations.play('move');
+
+  if(plume.body.onFloor()){
+    plume.animations.stop();
+  }
 };
 
 function backToMenu(){

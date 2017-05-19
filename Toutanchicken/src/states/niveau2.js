@@ -4,6 +4,8 @@ var map;
 var layer;
 var cursors;
 var player;
+var bats;
+var bats2;
 var croco;
 var croco2;
 var momie;
@@ -11,6 +13,7 @@ var scarabe;
 var sphinx;
 var sphinx2;
 var sphinx3;
+var tornade;
 var bulletTime = 0;
 var oneEgg = false;
 var smokeAnimation = false;
@@ -43,7 +46,7 @@ Game.prototype.create = function () {
 
     music = this.game.add.audio('music1');
     music.loop = true;
-    // music.play();
+    music.play();
 
 	// ---------------------------
 	//          MAP 
@@ -72,7 +75,7 @@ Game.prototype.create = function () {
 	// ---------------------------
 
 	// Le joueur : Arg1 et Arg2 = coordonnées de départ ; Arg3 = nom de la spritesheet déclarée en preload
-	player = this.add.sprite(1880, 100, 'chicken');
+	player = this.add.sprite(40, 123, 'chicken');
     // On active le moteur physique sur le joueur
 	this.physics.enable(player);
 	// Les propriétés physiques du joueur. On paramètre ici le rebond, la gravité, etc.
@@ -89,7 +92,7 @@ Game.prototype.create = function () {
     player.animations.add('left', [8, 9, 10, 11, 12, 13, 14, 15], 10, true)
     ;
     player.animations.add('jump', [0, 1, 2, 3, 4, 5, 6, 7], 10, true);
-    
+
     spacebar = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
 
 
@@ -99,7 +102,7 @@ Game.prototype.create = function () {
 
 	// Les crocodiles : Arg1 et Arg2 = coordonnées de départ ; Arg3 = nom de la spritesheet déclarée en preload
 	croco = this.add.sprite(1889, 507, 'croco');
-	croco2 = this.add.sprite(3652, 507, 'croco');
+	croco2 = this.add.sprite(3293, 347, 'croco');
     // On active le moteur physique sur les crocodiles
 	this.physics.enable(croco);
 	this.physics.enable(croco2);
@@ -115,8 +118,8 @@ Game.prototype.create = function () {
 	// ---------------------------
 
     // The momie and its settings
-    momie = this.add.sprite(2396, 347, 'momie');
-    momie2 = this.add.sprite(5102, 251, 'momie');
+    momie = this.add.sprite(2779, 507, 'momie');
+    momie2 = this.add.sprite(3952, 155, 'momie');
 
     //  We need to enable physics on the momie
     this.physics.arcade.enable(momie);
@@ -138,7 +141,7 @@ Game.prototype.create = function () {
 	// ---------------------------
 
     // The scarabe and its settings
-    scarabe = this.add.sprite(2875, 264, 'scarabe');
+    scarabe = this.add.sprite(2386, 347, 'scarabe');
 
     //  We need to enable physics on the scarabe
     this.physics.arcade.enable(scarabe);
@@ -160,8 +163,8 @@ Game.prototype.create = function () {
 	// ---------------------------
 
     // The bats and its settings
-    bats = this.add.sprite(5000, 350, 'bats');
-    bats2 = this.add.sprite(5000, 200, 'bats');
+    bats = this.add.sprite(3968, 270, 'bats');
+    bats2 = this.add.sprite(5390, 340, 'bats');
 
     //  We need to enable physics on the bats
     this.physics.arcade.enable(bats);
@@ -184,7 +187,7 @@ Game.prototype.create = function () {
 
     // The scorpion and its settings
     scorpion = this.add.sprite(1785, 123, 'scorpion');
-    scorpion2 = this.add.sprite(1781, 123, 'scorpion');
+    scorpion2 = this.add.sprite(5491, 411, 'scorpion');
 
     //  We need to enable physics on the scorpion
     this.physics.arcade.enable(scorpion);
@@ -225,7 +228,7 @@ Game.prototype.create = function () {
 
 
 	// The poussin and its settings
-    poussin = this.add.sprite(6260, 443, 'poussin');
+    poussin = this.add.sprite(6310, 530, 'poussin');
 
     //  We need to enable physics on the poussin
     this.physics.arcade.enable(poussin);
@@ -243,9 +246,9 @@ Game.prototype.create = function () {
 	// ---------------------------
 
     // The sphinx and its settings
-    sphinx = this.add.sprite(850, 300, 'sphinx');
-    sphinx2 = this.add.sprite(1000, 470, 'sphinx');
-    sphinx3 = this.add.sprite(1150, 300, 'sphinx');
+    sphinx = this.add.sprite(830, 300, 'sphinx');
+    sphinx2 = this.add.sprite(1025, 400, 'sphinx');
+    sphinx3 = this.add.sprite(1220, 300, 'sphinx');
 
     //  We need to enable physics on the sphinx
     this.physics.arcade.enable(sphinx);
@@ -281,6 +284,27 @@ Game.prototype.create = function () {
     arrowRight3 = this.add.sprite(1888, 385, 'arrow_right');
     this.physics.arcade.enable(arrowRight3);
     arrowRight3.body.collideWorldBounds = true;
+
+
+    speedArrow = this.add.sprite(3200, 590, 'arrow_right');
+    this.physics.arcade.enable(speedArrow);
+    speedArrow.body.collideWorldBounds = true;
+
+
+    // ---------------------------
+	//           TORNADE 
+	// ---------------------------
+
+    tornade = this.add.sprite(2650, 350, 'tornade');
+    this.physics.arcade.enable(tornade);
+    tornade.body.collideWorldBounds = true;
+
+    tornade2 = this.add.sprite(4950, 100, 'tornade');
+    this.physics.arcade.enable(tornade2);
+    tornade2.body.collideWorldBounds = true;
+
+    tornade.animations.add('move', [0, 1, 2, 3, 4, 5, 6], 10, true);
+    tornade2.animations.add('move', [0, 1, 2, 3, 4, 5, 6], 10, true);
 
 
 	// ---------------------------
@@ -320,7 +344,7 @@ Game.prototype.create = function () {
 
     for (var q = 1; q < 2; q++)
     {
-    	var bnsc = invincibilite.create(q * 2300, 0, 'invincibilite');
+    	var bnsc = invincibilite.create(q * 3800, 0, 'invincibilite');
     	bnsc.body.gravity.y=300;
     }
 
@@ -339,7 +363,7 @@ Game.prototype.create = function () {
 	healthText = this.add.text(600, 16, 'Health : 3 lifes', { fontsize: '32px', fill: 'red'});
 
 	// Ecriture WIN
-	youWin = this.add.bitmapText(6000, 200, 'carrier_command', 'You Win !', 34);
+	youWin = this.add.bitmapText(6000, 200, 'carrier_command', 'Bravo !', 34);
 	youWin.visible = false;
 	// youWin.fixedToCamera = true;
 	youWin.anchor.x = 0.5;
@@ -353,18 +377,19 @@ Game.prototype.update = function () {
 
 // Le joueur entre en collision avec les plate-formes
 	var hitPlatform = this.game.physics.arcade.collide(player, layer);
+
 	// Idem entre les différents éléments du jeu
 	this.game.physics.arcade.collide(graines, layer);
 	this.game.physics.arcade.collide(seeds, layer);
 	this.game.physics.arcade.collide(croco, layer);
-	// this.game.physics.arcade.collide(croco2, layer);
+	this.game.physics.arcade.collide(croco2, layer);
 	this.game.physics.arcade.collide(momie, layer);
 	this.game.physics.arcade.collide(momie2, layer);
-	// this.game.physics.arcade.collide(scarabe, layer);
-	// this.game.physics.arcade.collide(bats, layer);
-	// this.game.physics.arcade.collide(bats2, layer);
+	this.game.physics.arcade.collide(scarabe, layer);
+	this.game.physics.arcade.collide(bats, layer);
+	this.game.physics.arcade.collide(bats2, layer);
 	this.game.physics.arcade.collide(scorpion, layer);
-	// this.game.physics.arcade.collide(scorpion2, layer);
+	this.game.physics.arcade.collide(scorpion2, layer);
 	this.game.physics.arcade.collide(bullets, layer);
 	this.game.physics.arcade.collide(poussin, layer);
 	this.game.physics.arcade.collide(sphinx, layer);
@@ -374,6 +399,8 @@ Game.prototype.update = function () {
 	this.game.physics.arcade.collide(arrowRight, layer);
 	this.game.physics.arcade.collide(arrowRight2, layer);
 	this.game.physics.arcade.collide(arrowRight3, layer);
+	this.game.physics.arcade.collide(speedArrow, layer);
+	this.game.physics.arcade.collide(tornade, layer);
 
 
 	// On vérifie si le joueur mange une graine, si c'est le cas, on appelle la fonction collectGraine
@@ -396,6 +423,8 @@ Game.prototype.update = function () {
 	this.game.physics.arcade.overlap(player, arrowRight, collideEnnemy, null, this);
 	this.game.physics.arcade.overlap(player, arrowRight2, collideEnnemy, null, this);
 	this.game.physics.arcade.overlap(player, arrowRight3, collideEnnemy, null, this);
+	this.game.physics.arcade.overlap(player, speedArrow, collideEnnemy, null, this);
+
 	this.game.physics.arcade.overlap(player, invincibilite, TouchBoostedEgg, null, this);
 
 	this.game.physics.arcade.overlap(bullets, momie, collideEgg, null, this);
@@ -419,7 +448,8 @@ Game.prototype.update = function () {
     // On initialise la vitesse du joueur à 0
     player.body.velocity.x = 0;
 
-    if (cursors.left.isDown)
+    	
+	if (cursors.left.isDown)
     {
         // Déplacement à gauche (recule)
         player.body.velocity.x = -200;
@@ -432,6 +462,7 @@ Game.prototype.update = function () {
         player.body.velocity.x = 200;
         player.animations.play('right');
     }
+    
     else
     {
         // Joueur s'arrête
@@ -458,7 +489,7 @@ Game.prototype.update = function () {
     {
 		fireBullet();
 		oneEgg = true;
-		console.log(player.body.x, player.body.y);
+		console.log(player.body.x, player.body.y, tornade2.body.y);
     }
 
     if (health == 0)
@@ -480,44 +511,44 @@ Game.prototype.update = function () {
 
     if(croco.body.x > 2025){
         croco.animations.play('left');
-        croco.body.velocity.x = -80;
+        croco.body.velocity.x = -100;
     }
     if(croco.body.x < 1890){
         croco.animations.play('right');
-        croco.body.velocity.x = 80;
+        croco.body.velocity.x = 100;
     }
 
     // CROCO 2
 
-    if(croco2.body.x > 3880){
+    if(croco2.body.x > 3575){
         croco2.animations.play('left');
-        croco2.body.velocity.x = -80;
+        croco2.body.velocity.x = -100;
     }
-    if(croco2.body.x < 3655){
+    if(croco2.body.x < 3295){
         croco2.animations.play('right');
-        croco2.body.velocity.x = 80;
+        croco2.body.velocity.x = 100;
     }
 
     // ---------------------------
 	//        MOMIE MOVES
 	// ---------------------------
 
-    if(momie.body.x > 2760){
+    if(momie.body.x > 2950){
         momie.animations.play('left');
         momie.body.velocity.x = -50;
     }
-    if(momie.body.x < 2400){
+    if(momie.body.x < 2780){
         momie.animations.play('right');
         momie.body.velocity.x = 50;
     }
 
     // MOMIE 2
 
-    if(momie2.body.x > 5425){
+    if(momie2.body.x > 4155){
         momie2.animations.play('left');
         momie2.body.velocity.x = -50;
     }
-    if(momie2.body.x < 5105){
+    if(momie2.body.x < 3955){
         momie2.animations.play('right');
         momie2.body.velocity.x = 50;
     }
@@ -526,52 +557,15 @@ Game.prototype.update = function () {
 	//        SCARABE MOVES
 	// ---------------------------
 
-	// Demi-tour 
-	if(scarabe.body.x < 2880){
+	if(scarabe.body.x < 2390){
         scarabe_direction = 'right';
     	scarabe.body.velocity.x = 50;
     	scarabe.animations.play('right');
     }
-
-    // 1° Plateforme
-    if(scarabe.body.x > 2880 && scarabe.body.x < 3110){
-    	if(scarabe_direction == 'right'){
-    		scarabe.body.velocity.x = 50;
-    		scarabe.animations.play('right');
-    	}
-    	else if(scarabe_direction == 'left'){
-    		scarabe.body.velocity.x = -50;
-    		scarabe.animations.play('left');
-    	}
-    }
-
-    // Vol
-	if(scarabe.body.x > 3110){
-   		scarabe.animations.play('fly');
-	}
-
-	// 2° Plateforme
-    if(scarabe.body.x > 3280 && scarabe.body.x < 3490){
-    	if(scarabe_direction == 'right'){
-    		scarabe.body.velocity.x = 50;
-    		scarabe.animations.play('right');
-    	}
-    	else if(scarabe_direction == 'left'){
-    		scarabe.body.velocity.x = -50;
-    		scarabe.animations.play('left');
-    	}
-    }
-
-    // Demi-tour
-    if(scarabe.body.x > 3490){
-    	scarabe_direction = 'left';
+    if(scarabe.body.x > 2590){
+        scarabe_direction = 'left';
     	scarabe.body.velocity.x = -50;
     	scarabe.animations.play('left');
-    }
-
-    // Reste à la même hauteur en vol
-    if(scarabe.body.y > 264){
-       	scarabe.body.velocity.y = -30;
     }
 
 
@@ -580,32 +574,32 @@ Game.prototype.update = function () {
 	// ---------------------------
 
 	// BATS 1
-    if(bats.body.x < 1890){
+    if(bats.body.x < 3970){
         bats.animations.play("right");
         bats.body.velocity.x = 100;
     }
-    if(bats.body.x > 2025){
+    if(bats.body.x > 4430){
         bats.animations.play("left");
         bats.body.velocity.x = -100;
     }
 
     // Ne descend pas trop
-    if(bats.body.y > 350){
+    if(bats.body.y > 270){
        	bats.body.velocity.y = -60;
     }
 
     // BATS 1
-    if(bats2.body.x < 1890){
+    if(bats2.body.x < 5392){
         bats2.animations.play("right");
         bats2.body.velocity.x = 100;
     }
-    if(bats2.body.x > 2025){
+    if(bats2.body.x > 5879){
         bats2.animations.play("left");
         bats2.body.velocity.x = -100;
     }
 
     // Ne descend pas trop
-    if(bats2.body.y > 200){
+    if(bats2.body.y > 340){
        	bats2.body.velocity.y = -60;
     }
 
@@ -652,8 +646,8 @@ Game.prototype.update = function () {
     if(arrowRight.body.x <2026){
     	arrowRight.body.velocity.x = 250;
     }
-    if(arrowRight.body.onWall()){
-    	resetArrow(arrowRight, 235);
+    if(arrowRight.body.onWall() && player.body.x < 2300){
+    	resetArrow(arrowRight, 1888, 235);
     }
 	if(arrowRight.body.y > 235){
        	arrowRight.body.velocity.y = -10;
@@ -663,21 +657,55 @@ Game.prototype.update = function () {
     if(arrowRight2.body.x <2026){
     	arrowRight2.body.velocity.x = 250;
     }
-    if(arrowRight2.body.onWall()){
-    	resetArrow(arrowRight2, 310);
+    if(arrowRight2.body.onWall() && player.body.x < 2300){
+    	resetArrow(arrowRight2, 1888, 310);
     }
 	if(arrowRight2.body.y > 310){
        	arrowRight2.body.velocity.y = -10;
     }
+
 	//Flèche 3
     if(arrowRight3.body.x <2026){
     	arrowRight3.body.velocity.x = 250;
     }
-    if(arrowRight3.body.onWall()){
-    	resetArrow(arrowRight3, 385);
+    if(arrowRight3.body.onWall() && player.body.x < 2300){
+    	resetArrow(arrowRight3, 1888, 385);
     }
 	if(arrowRight3.body.y > 385){
        	arrowRight3.body.velocity.y = -10;
+    }
+
+    //Flèche Rapide
+    if(speedArrow.body.x <3690){
+    	speedArrow.body.velocity.x = 500;
+    }
+    if(speedArrow.body.onWall() && player.body.x < 3700){
+    	resetArrow(speedArrow, 3200, 590);
+    }
+	if(speedArrow.body.y > 590){
+       	speedArrow.body.velocity.y = -10;
+    }
+
+    // ---------------------------
+	//        TORNADE MOVES
+	// ---------------------------
+
+	tornade.animations.play('move');
+
+	if(tornade.body.y > 350){
+       	tornade.body.velocity.y = -30;
+    }
+    if(player.body.x > 2620 && player.body.x < 2735){	
+    	player.body.velocity.y = 450;
+    }
+
+    tornade2.animations.play('move');
+
+	if(tornade2.body.y > 100){
+       	tornade2.body.velocity.y = -30;
+    }
+    if(player.body.x > 4895 && player.body.x < 5005){	
+    	player.body.velocity.y = 400;
     }
 
 }
@@ -811,10 +839,10 @@ function deleteEgg (bullet){
 	return oneEgg;	
 }
 
-function resetArrow(arrow, ypos){
+function resetArrow(arrow, xpos, ypos){
 	arrow.body.velocity.x = 0;
 	setTimeout(function(){
-		// arrow.reset(1888, ypos);
+		arrow.reset(xpos, ypos);
 	}, 500);
 }
 
@@ -823,7 +851,14 @@ function TouchBoostedEgg (player, special_egg) {
 }
 
 function winLevel (player, poussin){
-	youWin.visible = true;
+	if(!winner){
+		music.stop();
+        youWin.visible = true;
+        setTimeout(function(){    
+            thisGame.state.start('gamewin');
+        }, 1000); 
+    }
+	winner = true;
 }
 
 module.exports = Game;

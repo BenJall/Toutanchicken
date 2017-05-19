@@ -23,6 +23,7 @@ Preloader.prototype.preload = function () {
   this.game.load.spritesheet('sphinx', '/assets/sphinx.png', 112, 128); 
   this.game.load.spritesheet('fumee', '/assets/fumee.png', 92, 80); 
   this.game.load.spritesheet('plume', '/assets/plume.png', 57, 36); 
+  this.game.load.spritesheet('tornade', '/assets/tornade.png', 113, 209); 
   this.game.load.image('egg', '/assets/egg.png', 30, 31); 
   this.game.load.image('niveau1', '/assets/niveau1.png', 192, 74); 
   this.game.load.image('niveau2', '/assets/niveau2.png', 192, 74);
@@ -50,7 +51,7 @@ Preloader.prototype.create = function () {
 
 Preloader.prototype.update = function () {
   // if (!!this.ready) {
-    this.game.state.start('niveau2');
+    this.game.state.start('menu');
   // }
 };
 

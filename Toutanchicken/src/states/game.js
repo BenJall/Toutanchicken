@@ -736,6 +736,7 @@ function TouchBoostedEgg (player, special_egg) {
 
 function winLevel (player, poussin){
     if(!winner){
+        music.stop();
         youWin.visible = true;
         setTimeout(function(){    
             thisGame.state.start('gamewin');
