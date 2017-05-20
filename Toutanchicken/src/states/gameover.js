@@ -1,23 +1,41 @@
 function Gameover() {}
 
+var entree;
+var echap;
+
+Gameover.prototype.init = function (levelName) {
+  niveau = levelName.level;
+};
+
 Gameover.prototype.create = function () {
 
-  this.add.sprite(0, 0, 'backgroundGameOver');
+  // BACKGROUND ET ECRITURE
 
-  // var text = this.add.text(this.game.width * 0.5, this.game.height * 0.5, 'Gameover', {
-  //   font: '42px Arial', fill: '#ffffff', align: 'center'
-  // });
-  // text.anchor.set(0.5);
+  this.add.sprite(0, 0, 'backgroundGameOver');
 
   var text = this.add.image(this.game.width * 0.5, this.game.height * 0.3, 'gameover');
   text.anchor.set(0.5);
 
-  this.input.onDown.add(this.onInputDown, this);
+  // this.input.onDown.add(this.onInputDown, this);
 
-  this.game.physics.arcade.gravity.y = 50;
+  // BOUTONS
+
+  var replay = this.game.add.button(this.game.width * 0.5, this.game.height * 0.6, 'replay', replayLastLevel, this);
+  replay.anchor.set(0.5);
 
   var menu = this.game.add.button(this.game.width * 0.5, this.game.height * 0.8, 'menu', backToMenu, this);
   menu.anchor.set(0.5);
+
+  // TOUCHES
+
+  entree = this.game.input.keyboard.addKey(Phaser.Keyboard.ENTER);
+  echap = this.game.input.keyboard.addKey(Phaser.Keyboard.ESC);
+
+  thisGame = this;
+
+  // CREATION PLUME
+
+  this.game.physics.arcade.gravity.y = 50;
 
   plume = this.add.sprite(this.game.width * 0.5, 0, 'plume');
   this.physics.enable(plume);
@@ -27,19 +45,35 @@ Gameover.prototype.create = function () {
 };
 
 Gameover.prototype.update = function () {
+
+  // ANIMATION PLUME
 	plume.animations.play('move');
 
   if(plume.body.onFloor()){
     plume.animations.stop();
   }
+
+  // TOUCHES
+
+  if(entree.isDown){
+    replayLastLevel();
+  }
+
+  if(echap.isDown){
+    backToMenu();
+  }
 };
 
 function backToMenu(){
-	this.game.state.start('menu');
+	thisGame.state.start('menu');
+}
+
+function replayLastLevel(){
+  thisGame.state.start(niveau);
 }
 
 Gameover.prototype.onInputDown = function () {
-  // this.game.state.start('menu');
+  // this.game.state.start(niveau);
 };
 
 module.exports = Gameover;

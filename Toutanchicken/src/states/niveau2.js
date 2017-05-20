@@ -17,12 +17,12 @@ var tornade;
 var bulletTime = 0;
 var oneEgg = false;
 var smokeAnimation = false;
+var smokeAnim2 = false;
 var plumeAnimation = false;
 var winner = false;
 var scarabe_direction = 'right';
 var invincibilite;
 var thisGame = null;
-
 
 var weapon;
 var seeds;
@@ -32,11 +32,11 @@ var cursors;
 var fireButton;
 var spacebar;
 
-var health = 3;
-var healthText;
+var bonusText;
 var score = 0;
 var scoreText;
 var youWin;
+var angry = false;
 
 Game.prototype.create = function () {
 
@@ -317,36 +317,25 @@ Game.prototype.create = function () {
 		graines.enableBody = true;
 
 		// On créé 12 graines
-	for (var i = 1; i < 12; i++)
+	for (var i = 1; i < 25; i++)
     {
         // Créé une graine dans le groupe 'graines'
-        var graine = graines.create(i * 70, 500, 'graine');
+        var graine = graines.create(i * 290, 500, 'graine');
         // Active la gravité sur la graine (elle tombe au sol)
         graine.body.gravity.y = 300;
     }
 
-    // On créé 1 tas de graines (super pouvoir à déterminer)
-    seeds = this.add.group();
-    seeds.enableBody = true;
-
-    for (var j = 0; j < 2; j++)
-    {
-        var seed = seeds.create(j * 300, 500, 'seed');
-        seed.body.gravity.y=300;
-    }
+    score = 0;
 
 	// ---------------------------
 	//           BONUS 
 	// ---------------------------
 
-    invincibilite = this.add.group();
-    invincibilite.enableBody = true;
-
-    for (var q = 1; q < 2; q++)
-    {
-    	var bnsc = invincibilite.create(q * 3800, 0, 'invincibilite');
-    	bnsc.body.gravity.y=300;
-    }
+    invincibilite = this.add.sprite(4530, 50, 'invincibilite');
+    
+    this.physics.arcade.enable(invincibilite);
+    invincibilite.body.collideWorldBounds = true;
+    invincibilite.animations.add('move', [0, 1, 2, 3, 4, 5, 6], 8, true);
 
 
     // ---------------------------
@@ -354,13 +343,11 @@ Game.prototype.create = function () {
 	// ---------------------------
 
     // Gestion du score
-    scoreText = this.add.text(16, 16, 'score: 0 graines', { fontSize: '25px', fill: '#000' });
+    scoreText = this.add.text(16, 16, 'score: 0', { fontSize: '25px', fill: '#000' });
+    scoreText.fixedToCamera = true;
 
     // Les contrôles du joueur
     cursors = this.input.keyboard.createCursorKeys();
-
-    // La santé du joueur
-	healthText = this.add.text(600, 16, 'Health : 3 lifes', { fontsize: '32px', fill: 'red'});
 
 	// Ecriture WIN
 	youWin = this.add.bitmapText(6000, 200, 'carrier_command', 'Bravo !', 34);
@@ -380,7 +367,6 @@ Game.prototype.update = function () {
 
 	// Idem entre les différents éléments du jeu
 	this.game.physics.arcade.collide(graines, layer);
-	this.game.physics.arcade.collide(seeds, layer);
 	this.game.physics.arcade.collide(croco, layer);
 	this.game.physics.arcade.collide(croco2, layer);
 	this.game.physics.arcade.collide(momie, layer);
@@ -405,8 +391,6 @@ Game.prototype.update = function () {
 
 	// On vérifie si le joueur mange une graine, si c'est le cas, on appelle la fonction collectGraine
 	this.game.physics.arcade.overlap(player, graines, collectGraine, null, this);
-	// Idem s'il mange un tas de graines
-	this.game.physics.arcade.overlap(player, seeds, collectSeed, null, this);
 	// On vérifie si le joueur touche un crocodile, si c'est le cas, on appelle la fonction collideCroco
 	this.game.physics.arcade.overlap(player, croco, collideEnnemy, null, this);
 	this.game.physics.arcade.overlap(player, croco2, collideEnnemy, null, this);
@@ -489,17 +473,9 @@ Game.prototype.update = function () {
     {
 		fireBullet();
 		oneEgg = true;
-		console.log(player.body.x, player.body.y, tornade2.body.y);
     }
 
-    if (health == 0)
-    {
-    	this.game.add.text(400, 300, 'YOU DIED', { fontsize: '300px', fill: 'GREEN'});
-    	//player.animations.stop()
-	}
-
-
-	if (player.y > this.game.world.height){
+	if (player.y > thisGame.world.height){
 		player.kill();
 		gameOver();
 	}
@@ -708,6 +684,12 @@ Game.prototype.update = function () {
     	player.body.velocity.y = 400;
     }
 
+    // ---------------------------
+    //        BONUS MOVES
+    // ---------------------------
+
+    invincibilite.animations.play('move');
+
 }
 
 
@@ -716,8 +698,16 @@ Game.prototype.onInputDown = function () {
 };
 
 function gameOver(){
+	if(angry){
+        ChangeSpriteToNormal();
+    }
     music.stop();
-    thisGame.state.start('gameover');
+    
+    levelName = {
+		level: 'niveau2'
+	};
+
+    thisGame.state.start('gameover', true, false, levelName);
 }
 
 function fireBullet () {
@@ -746,44 +736,39 @@ function collectGraine (player, graine) {
 
     //  Add and update the score
     score += 1;
-    scoreText.text = 'Score: ' + score + ' graines';
+    scoreText.text = 'Score: ' + score;
     /*health -= 1;
     healthText.text = 'Health : '+ health +' lifes';*/
 
 
-}
-
-function collectSeed (player, seed) {
-    seed.kill();
-    score+=100;
-    score.text = 'Score: ' + score + ' graines';
-    /*health -= 1;
-    healthText.text = 'Health : '+ health +' lifes';*/
 }
 
 function collideEnnemy (player, ennemy){
 
-	if(!smokeAnimation){
+	if(angry == false){
+    	if(!smokeAnimation){
 
-		if(!plumeAnimation){
-			plumeAnim(player);
-		}
+    		if(!plumeAnimation){
+    			plumeAnim(player);
+    		}
 
-		plumeAnimation = true;
-				
-		setTimeout(function(){
-			player.kill();
-		}, 450);
+    		plumeAnimation = true;
+    				
+    		setTimeout(function(){
+    			player.kill();
+    		}, 450);
 
-		setTimeout(function(){
-			plumeAnimation = false;
-			gameOver();
-		}, 1000);
-	}
-	
-	// score+=10;
-	// health -= 1;
- //    healthText.text = 'Health : '+ health +' lifes';
+    		setTimeout(function(){
+    			plumeAnimation = false;
+    			gameOver();
+    		}, 1000);
+    	}
+    }
+    else if(angry == true){
+        ennemy.kill();
+        score += 20;
+        scoreText.text = 'Score: ' + score;
+    }
 
 }
 
@@ -797,6 +782,8 @@ function collideEgg (ennemy, bullet){
 
 	setTimeout(function(){
 		ennemy.kill();
+		score += 1;
+        scoreText.text = 'Score: ' + score;
 	}, 450);
 	
 	setTimeout(function(){
@@ -847,7 +834,52 @@ function resetArrow(arrow, xpos, ypos){
 }
 
 function TouchBoostedEgg (player, special_egg) {
-	special_egg.kill();
+	//le poulet devient chuck norris
+    angry = true;
+    // activer la fumée lors de la destruction de l'oeuf colere
+    if(!smokeAnimation || !smokeAnim2){
+       smokeAnim(special_egg);             
+    }
+
+    smokeAnim2 = true;
+
+    setTimeout(function(){
+        special_egg.kill();
+    }, 450);
+                
+    // changement de sprite au niveau du chicken. 
+        
+    player.loadTexture("angrychicken", 0);
+
+    //gestion du temps du bonus angry
+    // chrono de 10 secondes :
+    bonusText = thisGame.add.text(this.game.width * 0.8, 16, '', { fontSize: '31px', fill: '#f6bb1a' });
+    bonusText.fixedToCamera = true;
+
+    // Décompte de 10s
+    decompte();
+
+    //et après 10 secondes on revient à la normale
+    setTimeout(ChangeSpriteToNormal, 10000);
+}
+
+function decompte(){
+    for(var i=0; i<10; i++){
+        (function(i){
+            setTimeout(function(){
+                bonusText.text = 'Bonus :'+ i +'s';
+            }, 1000*i);
+        })(i+1);
+    }
+}
+
+
+function ChangeSpriteToNormal(){
+    if(angry){
+        bonusText.destroy();
+        player.loadTexture("chicken", 0);
+        angry = false;
+    }
 }
 
 function winLevel (player, poussin){

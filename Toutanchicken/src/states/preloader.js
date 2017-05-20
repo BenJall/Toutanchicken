@@ -27,13 +27,15 @@ Preloader.prototype.preload = function () {
   this.game.load.image('egg', '/assets/egg.png', 30, 31); 
   this.game.load.image('niveau1', '/assets/niveau1.png', 192, 74); 
   this.game.load.image('niveau2', '/assets/niveau2.png', 192, 74);
-  this.game.load.image('menu', '/assets/menu.png', 192, 74);  
+  this.game.load.image('menu', '/assets/menu2.png', 192, 74);  
+  this.game.load.image('replay', '/assets/replay2.png', 192, 74);  
   this.game.load.image('controls', '/assets/controls.png', 600, 200);  
   this.game.load.image('gamename', '/assets/gamename.png', 600, 200);
   this.game.load.image('gameover', '/assets/gameover.png', 600, 200);
   this.game.load.image('victoire', '/assets/victoire.png', 600, 200);
   this.game.load.image('poussin_win', '/assets/poussin_win.png', 336, 396);
-  this.game.load.image('invincibilite', '/assets/invincibilite.png');
+  this.game.load.spritesheet('angrychicken', 'assets/angrychicken.png', 54, 69);
+  this.game.load.spritesheet('invincibilite', '/assets/invincibilites.png', 24, 24);
   this.game.load.image('arrow_right', '/assets/arrow_right.png', 32, 8); 
   this.game.load.audio('music1', '/assets/audio/Toutanchicken.wav');
 
