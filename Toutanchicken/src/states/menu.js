@@ -3,6 +3,10 @@ function Menu() {}
 
 Menu.prototype.create = function () {
 
+	music = this.game.add.audio('menu');
+    music.loop = true;
+    music.play();
+
 	this.add.sprite(0, 0, 'background');
 
 
@@ -28,9 +32,11 @@ Menu.prototype.onInputDown = function () {
 };
 
 function play1(){
+	music.stop();
 	this.game.state.start('game');
 }
 function play2(){
+	music.stop();
 	this.game.state.start('niveau2');
 }
 

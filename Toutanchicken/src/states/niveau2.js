@@ -48,6 +48,23 @@ Game.prototype.create = function () {
     music.loop = true;
     music.play();
 
+    chickenJump = this.game.add.audio('chickenJump');
+    chickenJump.loop = false;
+    chickenJump.volume = 0.5;
+
+    chickenRun = this.game.add.audio('chickenRun');
+    chickenRun.loop = false;
+
+    eggPop = this.game.add.audio('eggPop');
+    eggPop.loop = false;    
+    eggPop.volume = 0.4;
+
+    musicWin = this.game.add.audio('musicWin');
+    musicWin.loop = false;
+
+    loose = this.game.add.audio('loose');
+    loose.loop = false;
+
 	// ---------------------------
 	//          MAP 
 	// ---------------------------
@@ -356,6 +373,15 @@ Game.prototype.create = function () {
 	youWin.anchor.x = 0.5;
 	youWin.anchor.y = 0.5;
 
+	oneGameOver = false;
+    oneEgg = false;
+    smokeAnimation = false;
+    smokeAnim2 = false;
+    plumeAnimation = false;
+    winner = false;
+    oneGameOver = false;
+    angry = false;
+
     thisGame = this;
 }
 
@@ -467,11 +493,15 @@ Game.prototype.update = function () {
     {
         player.body.velocity.y = -500;
         player.animations.play('jump');
+        if(!plumeAnimation){
+            chickenJump.play();
+        }
     }
 
     if ((cursors.down.isDown || spacebar.isDown) && bullets.total == 0 && player.alive == true && !plumeAnimation)
     {
 		fireBullet();
+		eggPop.play();
 		oneEgg = true;
     }
 
@@ -701,8 +731,8 @@ function gameOver(){
 	if(angry){
         ChangeSpriteToNormal();
     }
+
     music.stop();
-    
     levelName = {
 		level: 'niveau2'
 	};
@@ -758,10 +788,16 @@ function collideEnnemy (player, ennemy){
     			player.kill();
     		}, 450);
 
-    		setTimeout(function(){
-    			plumeAnimation = false;
-    			gameOver();
-    		}, 1000);
+    		if(!oneGameOver){
+                loose.play();
+                music.fadeOut(1200)
+                setTimeout(function(){
+                    plumeAnimation = false;
+                    gameOver();
+                }, 1000);
+            }
+
+            oneGameOver = true;
     	}
     }
     else if(angry == true){
@@ -884,11 +920,13 @@ function ChangeSpriteToNormal(){
 
 function winLevel (player, poussin){
 	if(!winner){
-		music.stop();
+		music.fadeOut(2000);
+        musicWin.play();
         youWin.visible = true;
-        setTimeout(function(){    
+        setTimeout(function(){
+            music.stop();    
             thisGame.state.start('gamewin');
-        }, 1000); 
+        }, 1500); 
     }
 	winner = true;
 }

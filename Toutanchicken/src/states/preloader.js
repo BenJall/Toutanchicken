@@ -37,7 +37,16 @@ Preloader.prototype.preload = function () {
   this.game.load.spritesheet('angrychicken', 'assets/angrychicken.png', 54, 69);
   this.game.load.spritesheet('invincibilite', '/assets/invincibilites.png', 24, 24);
   this.game.load.image('arrow_right', '/assets/arrow_right.png', 32, 8); 
-  this.game.load.audio('music1', '/assets/audio/Toutanchicken.wav');
+   
+  this.game.load.audio('music1', '/assets/audio/Toutanchicken1.wav');
+  this.game.load.audio('chickenJump', '/assets/audio/Chicken_jump.wav');
+  this.game.load.audio('chickenRun', '/assets/audio/Chicken_run.wav');
+  this.game.load.audio('eggPop', '/assets/audio/Egg_pop2.wav');
+  this.game.load.audio('musicOver', '/assets/audio/GameOver.wav');
+  this.game.load.audio('menu', '/assets/audio/menu.wav');
+  this.game.load.audio('musicWin', '/assets/audio/poussin.wav');
+  this.game.load.audio('loose', '/assets/audio/loose.wav');
+  this.game.load.audio('victoireSong', '/assets/audio/victoire.wav');
 
   this.game.load.bitmapFont('carrier_command', 'assets/font/carrier_command.png', 'assets/font/carrier_command.xml');
   // this.game.load.bitmapFont('theminion', 'assets/font/theminion.ttf', 'assets/font/theminion.otf');

@@ -9,6 +9,13 @@ Gameover.prototype.init = function (levelName) {
 
 Gameover.prototype.create = function () {
 
+  // MUSIC
+
+  musicOver = this.game.add.audio('musicOver');
+  musicOver.loop = true;
+  musicOver.stop();
+  musicOver.play();
+
   // BACKGROUND ET ECRITURE
 
   this.add.sprite(0, 0, 'backgroundGameOver');
@@ -59,16 +66,18 @@ Gameover.prototype.update = function () {
     replayLastLevel();
   }
 
-  if(echap.isDown){
+  if(echap.isDown){ 
     backToMenu();
   }
 };
 
 function backToMenu(){
+  musicOver.stop();  
 	thisGame.state.start('menu');
 }
 
 function replayLastLevel(){
+  musicOver.stop();  
   thisGame.state.start(niveau);
 }
 

@@ -2,6 +2,10 @@ function Gameover() {}
 
 Gameover.prototype.create = function () {
 
+  music = this.game.add.audio('victoireSong');
+  music.loop = true;
+  music.play();
+
   // BACKGROUND et ECRITURE
   this.add.sprite(0, 0, 'backgroundWin');
 
@@ -51,6 +55,7 @@ Gameover.prototype.update = function () {
 }
 
 function backToMenu(){
+  music.stop();
 	thisGame.state.start('menu');
 }
 
